@@ -14,13 +14,24 @@ document.getElementById("boton-agregar").addEventListener("click", () => {
   botonEliminar.textContent = "-";
   botonEliminar.className = "btn-eliminar";
 
+  // Botón para marcar la tarea como completada
+  const botonCompletar = document.createElement("button");
+  botonCompletar.className = "btn-completar";
+
+  // Lógica para eliminar la tarea
   botonEliminar.addEventListener("click", () => {
-    lista.removeChild(tarea);
+    lista.removeChild(tarea); // Si se da click sobre el botón, elimina la tarea de la lista
+  });
+
+  // Lógica para completar la tarea
+  botonCompletar.addEventListener('click', () => {
+    tarea.classList.toggle('completada'); // Si se da click sobre el botón, la marca como completada
   });
 
   // Se agregan los elementos
-  tarea.appendChild(botonEliminar);
+  tarea.appendChild(botonCompletar);
   tarea.appendChild(texto);
+  tarea.appendChild(botonEliminar);
   lista.appendChild(tarea);
 
   input.value = ""
