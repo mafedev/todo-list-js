@@ -19,7 +19,12 @@ function agregarTarea(input) {
     fechaCreacion: null,
   };
 
+  let tareas = leerTareas();
+  tareas.push(tarea);
+  guardarTareas(tareas);
+
   const tareaLi = document.createElement("li");
+  tareaLi.dataset.id = tarea.id;
 
   const btnEliminar = document.createElement("button"); // Botón para eliminar la tarea
   btnEliminar.textContent = "-";
@@ -47,8 +52,61 @@ function agregarTarea(input) {
 
 function eliminarTarea(tarea) {
   lista.removeChild(tarea);
+
+  let tareas = leerTareas();
+  tareas = tareas.filter((t) => t.id !== Number(tarea.dataset.id));
+  guardarTareas(tareas);
 }
 
 function completarTarea(tarea) {
   tarea.classList.toggle("completada");
+
+  let tareas = leerTareas();
+  // Busca la tarea por id y cambia su estado
+  tareas = tareas.map((t) =>
+    t.id === Number(tarea.dataset.id)
+      ? {
+          ...t,
+          estado: t.estado === "completada" ? "incompleta" : "completada",
+        }
+      : t
+  );
 }
+
+function leerTareas() {
+  const tareasGuardadas = localStorage.getItem("tareas");
+  if (!tareasGuardadas) return [];
+  try {
+    return JSON.parse(tareasGuardadas);
+  } catch {
+    return [];
+  }
+}
+
+function guardarTareas(tareas) {
+  localStorage.setItem("tareas", JSON.stringify(tareas));
+}
+
+// Renderiza las tareas guardadas al cargar la página
+window.addEventListener("DOMContentLoaded", () => {
+  const tareas = leerTareas();
+  tareas.forEach((tarea) => {
+    const tareaLi = document.createElement("li");
+    tareaLi.dataset.id = tarea.id;
+    if (tarea.estado === "completada") tareaLi.classList.add("completada");
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "-";
+    btnEliminar.className = "btn-eliminar";
+    btnEliminar.addEventListener("click", () => eliminarTarea(tareaLi));
+
+    const btnCompletar = document.createElement("button");
+    btnCompletar.className = "btn-completar";
+    btnCompletar.addEventListener("click", () => completarTarea(tareaLi));
+
+    tareaLi.appendChild(btnCompletar);
+    tareaLi.appendChild(document.createTextNode(" " + tarea.texto + " "));
+    tareaLi.appendChild(btnEliminar);
+    lista.appendChild(tareaLi);
+  });
+});
