@@ -1,38 +1,54 @@
+const input = document.getElementById("input");
 const lista = document.getElementById("lista");
 
 // Escucha cuando se hace click, para luego tomar ese valor
 document.getElementById("boton-agregar").addEventListener("click", () => {
-  const input = document.getElementById("input");
-  const inputValue = input.value.trim(); // Para que no acepte espacios en blanco
-  if (inputValue === "") return;
+  const value = input.value.trim(); // Para que no acepte espacios en blanco
 
-  const tarea = document.createElement("li");
-  const texto = document.createTextNode(inputValue); // nodo de texto
+  if (value != "") {
+    agregarTarea(value);
+    input.value = "";
+  }
+});
 
-  // Botón para eliminar la tarea
-  const botonEliminar = document.createElement("button");
-  botonEliminar.textContent = "-";
-  botonEliminar.className = "btn-eliminar";
+function agregarTarea(input) {
+  const tarea = {
+    id: Date.now(),
+    texto: input,
+    estado: "incompleta",
+    fechaCreacion: null,
+  };
 
-  // Botón para marcar la tarea como completada
-  const botonCompletar = document.createElement("button");
-  botonCompletar.className = "btn-completar";
+  const tareaLi = document.createElement("li");
+
+  const btnEliminar = document.createElement("button"); // Botón para eliminar la tarea
+  btnEliminar.textContent = "-";
+  btnEliminar.className = "btn-eliminar";
+
+  const btnCompletar = document.createElement("button"); // Botón para marcar la tarea como completada
+  btnCompletar.className = "btn-completar";
 
   // Lógica para eliminar la tarea
-  botonEliminar.addEventListener("click", () => {
-    lista.removeChild(tarea); // Si se da click sobre el botón, elimina la tarea de la lista
+  btnEliminar.addEventListener("click", () => {
+    eliminarTarea(tareaLi);
   });
 
   // Lógica para completar la tarea
-  botonCompletar.addEventListener('click', () => {
-    tarea.classList.toggle('completada'); // Si se da click sobre el botón, la marca como completada
+  btnCompletar.addEventListener("click", () => {
+    completarTarea(tareaLi);
   });
 
-  // Se agregan los elementos
-  tarea.appendChild(botonCompletar);
-  tarea.appendChild(texto);
-  tarea.appendChild(botonEliminar);
-  lista.appendChild(tarea);
+  // Agregar los elementos
+  tareaLi.appendChild(btnCompletar);
+  tareaLi.appendChild(document.createTextNode(" " + tarea.texto + " "));
+  tareaLi.appendChild(btnEliminar);
+  lista.appendChild(tareaLi);
+}
 
-  input.value = ""
-});
+function eliminarTarea(tarea) {
+  lista.removeChild(tarea);
+}
+
+function completarTarea(tarea) {
+  tarea.classList.toggle("completada");
+}
