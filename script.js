@@ -11,6 +11,13 @@ document.getElementById("boton-agregar").addEventListener("click", () => {
   }
 });
 
+// Agregar la tarea pulsando el Enter
+document.getElementById("input").addEventListener("keypress", function (e){
+  if(e.key == "Enter"){
+    document.getElementById("boton-agregar").click();
+  }
+});
+
 function agregarTarea(input) {
   const tarea = {
     id: Date.now(),
