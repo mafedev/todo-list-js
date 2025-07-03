@@ -29,44 +29,21 @@ function agregarTarea(input) {
   let tareas = leerTareas();
   tareas.push(tarea);
   guardarTareas(tareas);
-
-  const tareaLi = document.createElement("li");
-  tareaLi.dataset.id = tarea.id;
-
-  const btnEliminar = document.createElement("button"); // Botón para eliminar la tarea
-  btnEliminar.textContent = "-";
-  btnEliminar.className = "btn-eliminar";
-
-  const btnCompletar = document.createElement("button"); // Botón para marcar la tarea como completada
-  btnCompletar.className = "btn-completar";
-
-  // Lógica para eliminar la tarea
-  btnEliminar.addEventListener("click", () => {
-    eliminarTarea(tareaLi);
-  });
-
-  // Lógica para completar la tarea
-  btnCompletar.addEventListener("click", () => {
-    completarTarea(tareaLi);
-  });
-
-  // Agregar los elementos
-  tareaLi.appendChild(btnCompletar);
-  tareaLi.appendChild(document.createTextNode(" " + tarea.texto + " "));
-  tareaLi.appendChild(btnEliminar);
-  lista.appendChild(tareaLi);
+  filtrarTareas(select.value);
 }
 
 function eliminarTarea(tarea) {
-  lista.removeChild(tarea);
+  //lista.removeChild(tarea);
 
   let tareas = leerTareas();
   tareas = tareas.filter((t) => t.id !== Number(tarea.dataset.id));
   guardarTareas(tareas);
+  filtrarTareas(select.value);
+
 }
 
 function completarTarea(tarea) {
-  tarea.classList.toggle("completada");
+  // tarea.classList.toggle("completada");
 
   let tareas = leerTareas();
   // Busca la tarea por id y cambia su estado
@@ -78,6 +55,8 @@ function completarTarea(tarea) {
         }
       : t
   );
+  guardarTareas(tareas);
+  filtrarTareas(select.value);
 }
 
 function leerTareas() {
@@ -94,26 +73,50 @@ function guardarTareas(tareas) {
   localStorage.setItem("tareas", JSON.stringify(tareas));
 }
 
+const select = document.getElementById("select-estado");
+select.addEventListener("change", () => {
+  filtrarTareas(select.value);
+});
+
+function filtrarTareas(estadoSelect){
+  const tareas = leerTareas();
+  lista.innerHTML = "";
+  
+  tareas.forEach(tarea => {
+    if(estadoSelect == tarea.estado){
+      crearElementos(tarea);
+    }
+  });
+
+}
+
+function crearElementos(tarea){
+  
+  const tareaLi = document.createElement("li");
+  tareaLi.dataset.id = tarea.id;
+
+  const btnEliminar = document.createElement("button");
+  btnEliminar.textContent = "-";
+  btnEliminar.className = "btn-eliminar";
+  btnEliminar.addEventListener("click", () => eliminarTarea(tareaLi));
+
+  const btnCompletar = document.createElement("button");
+  btnCompletar.className = "btn-completar";
+  btnCompletar.addEventListener("click", () => completarTarea(tareaLi));
+
+  agregarElementos(tarea, tareaLi, btnEliminar, btnCompletar);
+}
+
+// Agregar los elementos
+function agregarElementos(tarea, tareaLi, btnEliminar, btnCompletar) {
+  tareaLi.appendChild(btnCompletar);
+  tareaLi.appendChild(document.createTextNode(" " + tarea.texto + " "));
+  tareaLi.appendChild(btnEliminar);
+  lista.appendChild(tareaLi);
+}
+
 // Renderiza las tareas guardadas al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
-  const tareas = leerTareas();
-  tareas.forEach((tarea) => {
-    const tareaLi = document.createElement("li");
-    tareaLi.dataset.id = tarea.id;
-    if (tarea.estado === "completada") tareaLi.classList.add("completada");
+  filtrarTareas(select.value);
 
-    const btnEliminar = document.createElement("button");
-    btnEliminar.textContent = "-";
-    btnEliminar.className = "btn-eliminar";
-    btnEliminar.addEventListener("click", () => eliminarTarea(tareaLi));
-
-    const btnCompletar = document.createElement("button");
-    btnCompletar.className = "btn-completar";
-    btnCompletar.addEventListener("click", () => completarTarea(tareaLi));
-
-    tareaLi.appendChild(btnCompletar);
-    tareaLi.appendChild(document.createTextNode(" " + tarea.texto + " "));
-    tareaLi.appendChild(btnEliminar);
-    lista.appendChild(tareaLi);
-  });
 });
