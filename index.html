@@ -9,8 +9,17 @@
   <body>
     <!--Contenedor principal-->
     <div class="container">
-      <h1>TO-DO List</h1>
-      
+
+      <!--Header con el título y el select-->
+      <div class="header-menu">
+        <h1>TO-DO List</h1>
+        <select id="select-estado">
+          <option value="completada">Completadas</option>
+          <option value="incompleta">Sin completar</option>
+        </select>
+      </div>
+
+      <!--Contenedor de la entrada de tareas-->
       <div id="div-input">
         <input type="text" id="input" placeholder="Agregue una tarea" />
         <button id="boton-agregar">Agregar</button>

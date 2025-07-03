@@ -35,7 +35,27 @@ h1 {
   background-color: var(--input-bg);
   border-radius: 18px;
   box-shadow: var(--container-shadow);
-  max-width: 480px;
+  max-width: 980px;
+}
+
+/* Contenedor con el h1 y el select */
+.header-menu {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.header-menu h1 {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.header-menu select {
+  position: absolute;
+  right: 0; /*Hace que el select se alinee a la derecha*/
+  top: 50%; /*Centra el select verticalmente*/
+  transform: translateY(-50%); /*Compensa el alto del select para centrarlo*/
+  padding: 3px 8px;
+  height: 2rem;
 }
 
 /* Contenedor del input y botón de agregar */
