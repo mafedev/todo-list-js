@@ -96,6 +96,10 @@ function crearElementos(tarea){
   const tareaLi = document.createElement("li");
   tareaLi.dataset.id = tarea.id;
 
+  if(tarea.estado == "completada"){
+    tareaLi.classList.add("completada");
+  }
+
   const btnEliminar = document.createElement("button");
   btnEliminar.textContent = "-";
   btnEliminar.className = "btn-eliminar";
