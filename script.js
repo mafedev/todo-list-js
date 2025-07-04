@@ -33,8 +33,6 @@ function agregarTarea(input) {
 }
 
 function eliminarTarea(tarea) {
-  //lista.removeChild(tarea);
-
   let tareas = leerTareas();
   tareas = tareas.filter((t) => t.id !== Number(tarea.dataset.id));
   guardarTareas(tareas);
@@ -43,8 +41,6 @@ function eliminarTarea(tarea) {
 }
 
 function completarTarea(tarea) {
-  // tarea.classList.toggle("completada");
-
   let tareas = leerTareas();
   // Busca la tarea por id y cambia su estado
   tareas = tareas.map((t) =>
@@ -78,16 +74,21 @@ select.addEventListener("change", () => {
   filtrarTareas(select.value);
 });
 
-function filtrarTareas(estadoSelect){
+function filtrarTareas(estadoSelect) {
   const tareas = leerTareas();
   lista.innerHTML = "";
-  
-  tareas.forEach(tarea => {
-    if(estadoSelect == tarea.estado){
-      crearElementos(tarea);
-    }
-  });
 
+  if (estadoSelect != "todas") {
+    tareas.forEach((tarea) => {
+      if (estadoSelect == tarea.estado) {
+        crearElementos(tarea);
+      }
+    });
+  } else {
+    tareas.forEach((tarea) => {
+      crearElementos(tarea);
+    });
+  }
 }
 
 function crearElementos(tarea){
