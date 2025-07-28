@@ -3,17 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="style.css" />
     <title>To-do-list</title>
   </head>
   <body>
     <!--Contenedor principal-->
     <div class="container">
-
       <!--Header con el título y el select-->
-      <div class="header-menu">
-        <h1>TO-DO List</h1>
-        <select id="select-estado">
+      <div class="header-menu d-flex justify-content-between align-items-center py-3">
+        <h1 class="h3">TO-DO List</h1>
+        <select id="select-estado" class="form-select w-auto">
           <option value="todas">Todas</option>
           <option value="completada">Completadas</option>
           <option value="incompleta">Sin completar</option>
@@ -21,7 +26,7 @@
       </div>
 
       <!--Contenedor de la entrada de tareas-->
-      <div id="div-input">
+      <div class="d-flex" id="div-input">
         <input type="text" id="input" placeholder="Agregue una tarea" />
         <button id="boton-agregar">Agregar</button>
       </div>
