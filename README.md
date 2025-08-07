@@ -4,7 +4,9 @@ Esta es una **aplicación web de lista de tareas (To-Do List)** desarrollada con
 
 La app guarda las tareas usando **LocalStorage**, por lo que no se pierden aunque recargues o cierres el navegador.
 
----
+<p align="center">
+  <img width="800" alt="image" src="https://github.com/user-attachments/assets/d01c174d-1d17-4316-bd86-62d79f795034" />
+</p>
 
 ## Funcionalidades
 
@@ -16,8 +18,6 @@ La app guarda las tareas usando **LocalStorage**, por lo que no se pierden aunqu
   - Ver **todas** las tareas
   - Ver solo **completadas**
   - Ver solo **pendientes**
-
----
 
 ## Tecnologías utilizadas
 
