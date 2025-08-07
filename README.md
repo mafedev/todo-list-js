@@ -21,7 +21,7 @@ La app guarda las tareas usando **LocalStorage**, por lo que no se pierden aunqu
 
 ## Tecnologías utilizadas
 
-- **HTML5** – estructura de la aplicación
-- **CSS3** – diseño responsivo y estilos visuales
-- **JavaScript (vanilla)** – lógica, eventos, y persistencia en LocalStorage
+- **HTML5**
+- **CSS3**
+- **JavaScript (vanilla)**
 
