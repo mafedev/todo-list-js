@@ -42,15 +42,27 @@ function eliminarTarea(tarea) {
 
 function completarTarea(tarea) {
   let tareas = leerTareas();
-  // Busca la tarea por id y cambia su estado
-  tareas = tareas.map((t) =>
-    t.id === Number(tarea.dataset.id)
-      ? {
-          ...t,
-          estado: t.estado === "completada" ? "incompleta" : "completada",
-        }
-      : t
-  );
+
+  tareas = tareas.map((t) => {
+    if (t.id === Number(tarea.dataset.id)) {
+      const nuevoEstado =
+        t.estado === "completada" ? "incompleta" : "completada";
+
+      // Cambiar clase visual en el botón
+      const btnCompletar = tarea.querySelector(".btn-completar");
+      if (nuevoEstado === "completada") {
+        tarea.classList.add("completada");
+        btnCompletar.classList.add("completada-btn");
+      } else {
+        tarea.classList.remove("completada");
+        btnCompletar.classList.remove("completada-btn");
+      }
+
+      return { ...t, estado: nuevoEstado };
+    }
+    return t;
+  });
+
   guardarTareas(tareas);
   filtrarTareas(select.value);
 }
@@ -96,10 +108,6 @@ function crearElementos(tarea){
   const tareaLi = document.createElement("li");
   tareaLi.dataset.id = tarea.id;
 
-  if(tarea.estado == "completada"){
-    tareaLi.classList.add("completada");
-  }
-
   // Botón para eliminar tarea
   const btnEliminar = document.createElement("button");
   btnEliminar.className = "btn-eliminar";
@@ -133,6 +141,12 @@ function crearElementos(tarea){
   // Botón para completar tarea
   const btnCompletar = document.createElement("button");
   btnCompletar.className = "btn-completar";
+
+  if (tarea.estado === "completada") {
+    tareaLi.classList.add("completada");
+    btnCompletar.classList.add("completada-btn");
+  }
+
   btnCompletar.addEventListener("click", () => completarTarea(tareaLi));
 
   agregarElementos(tarea, tareaLi, btnEliminar, btnCompletar);
@@ -149,5 +163,4 @@ function agregarElementos(tarea, tareaLi, btnEliminar, btnCompletar) {
 // Renderiza las tareas guardadas al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
   filtrarTareas(select.value);
-
 });
