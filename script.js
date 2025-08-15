@@ -104,14 +104,12 @@ function filtrarTareas(estadoSelect) {
 }
 
 function crearElementos(tarea){
-  
   const tareaLi = document.createElement("li");
   tareaLi.dataset.id = tarea.id;
 
   // Botón para eliminar tarea
   const btnEliminar = document.createElement("button");
   btnEliminar.className = "btn-eliminar";
-
   btnEliminar.innerHTML = `
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" class="svgIcon bin-top">
     <g clip-path="url(#clip0_35_24)">
@@ -149,15 +147,57 @@ function crearElementos(tarea){
 
   btnCompletar.addEventListener("click", () => completarTarea(tareaLi));
 
-  agregarElementos(tarea, tareaLi, btnEliminar, btnCompletar);
-}
+  // Texto de la tarea (editable)
+  const spanTexto = document.createElement("span");
+  spanTexto.textContent = tarea.texto;
+  spanTexto.style.cursor = "pointer";
 
-// Agregar los elementos
-function agregarElementos(tarea, tareaLi, btnEliminar, btnCompletar) {
+  // Evento para editar al hacer click
+  spanTexto.addEventListener("click", function () {
+    const inputEdit = document.createElement("input");
+    inputEdit.type = "text";
+    inputEdit.value = tarea.texto;
+    inputEdit.className = "input-editar";
+    inputEdit.style.width = "70%";
+    spanTexto.replaceWith(inputEdit);
+    inputEdit.focus();
+
+    // Guardar al presionar Enter o perder foco
+    function guardarEdicion() {
+      const nuevoTexto = inputEdit.value.trim();
+      if (nuevoTexto && nuevoTexto !== tarea.texto) {
+        editarTarea(tarea.id, nuevoTexto);
+      }
+      // Restaurar el texto (sea que cambió o no)
+      inputEdit.replaceWith(spanTexto);
+      spanTexto.textContent = nuevoTexto || tarea.texto;
+    }
+
+    inputEdit.addEventListener("blur", guardarEdicion);
+    inputEdit.addEventListener("keydown", function(e){
+      if (e.key === "Enter") {
+        inputEdit.blur();
+      }
+    });
+  });
+
+  // Agregar elementos
   tareaLi.appendChild(btnCompletar);
-  tareaLi.appendChild(document.createTextNode(" " + tarea.texto + " "));
+  tareaLi.appendChild(document.createTextNode(" "));
+  tareaLi.appendChild(spanTexto);
+  tareaLi.appendChild(document.createTextNode(" "));
   tareaLi.appendChild(btnEliminar);
   lista.appendChild(tareaLi);
+}
+
+// Para editar tarea en localStorage
+function editarTarea(id, nuevoTexto) {
+  let tareas = leerTareas();
+  tareas = tareas.map(t =>
+    t.id === id ? { ...t, texto: nuevoTexto } : t
+  );
+  guardarTareas(tareas);
+  filtrarTareas(select.value);
 }
 
 // Renderiza las tareas guardadas al cargar la página
