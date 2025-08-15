@@ -1,13 +1,14 @@
-const input = document.getElementById("input");
-const lista = document.getElementById("lista");
+// --------- AGREGAR TAREA ---------
+const input = document.getElementById("input"); // Input para agregar tareas
+const lista = document.getElementById("lista"); // Lista donde se mostrarán las tareas
 
-// Escucha cuando se hace click, para luego tomar ese valor
+// Agregar la tarea al hacer click en el botón
 document.getElementById("boton-agregar").addEventListener("click", () => {
   const value = input.value.trim(); // Para que no acepte espacios en blanco
 
   if (value != "") {
     agregarTarea(value);
-    input.value = "";
+    input.value = ""; // Limpiar el input después de agregar la tarea
   }
 });
 
@@ -18,6 +19,8 @@ document.getElementById("input").addEventListener("keypress", function (e){
   }
 });
 
+// Lógica para agregar una tarea
+// Crea un objeto tarea y lo guarda en localStorage
 function agregarTarea(input) {
   const tarea = {
     id: Date.now(),
@@ -26,29 +29,31 @@ function agregarTarea(input) {
     fechaCreacion: null,
   };
 
-  let tareas = leerTareas();
-  tareas.push(tarea);
-  guardarTareas(tareas);
-  filtrarTareas(select.value);
+  let tareas = leerTareas(); // Leer las tareas guardadas
+  tareas.push(tarea); // Agregar la nueva tarea al array
+  guardarTareas(tareas); // Guardar las tareas actualizadas
+  filtrarTareas(select.value); // Filtrar las tareas según el estado seleccionado
 }
 
+// Lógica para eliminar una tarea
+// Elimina la tarea del array y actualiza localStorage
 function eliminarTarea(tarea) {
-  let tareas = leerTareas();
-  tareas = tareas.filter((t) => t.id !== Number(tarea.dataset.id));
-  guardarTareas(tareas);
-  filtrarTareas(select.value);
-
+  let tareas = leerTareas(); 
+  tareas = tareas.filter((t) => t.id !== Number(tarea.dataset.id)); // Filtrar las tareas para eliminar la seleccionada
+  guardarTareas(tareas); // Guardar las tareas actualizadas
+  filtrarTareas(select.value); // Filtrar las tareas según el estado seleccionado
 }
 
+// Lógica para completar una tarea
+// Cambia el estado de la tarea entre "completada" e "incompleta"
 function completarTarea(tarea) {
   let tareas = leerTareas();
 
-  tareas = tareas.map((t) => {
-    if (t.id === Number(tarea.dataset.id)) {
-      const nuevoEstado =
-        t.estado === "completada" ? "incompleta" : "completada";
+  tareas = tareas.map((t) => { // Iterar sobre las tareas
+    if (t.id === Number(tarea.dataset.id)) { // Buscar la tarea por su ID
+      const nuevoEstado = t.estado === "completada" ? "incompleta" : "completada"; // Cambiar el estado de la tarea, si es "completada" pasa a "incompleta" y viceversa
 
-      // Cambiar clase visual en el botón
+      // Cambiar clase visual en el botón dependiendo del estado
       const btnCompletar = tarea.querySelector(".btn-completar");
       if (nuevoEstado === "completada") {
         tarea.classList.add("completada");
@@ -58,7 +63,7 @@ function completarTarea(tarea) {
         btnCompletar.classList.remove("completada-btn");
       }
 
-      return { ...t, estado: nuevoEstado };
+      return { ...t, estado: nuevoEstado }; // Devuelve la tarea con el nuevo estado
     }
     return t;
   });
@@ -67,42 +72,48 @@ function completarTarea(tarea) {
   filtrarTareas(select.value);
 }
 
+// Lógica para leer tareas
 function leerTareas() {
-  const tareasGuardadas = localStorage.getItem("tareas");
-  if (!tareasGuardadas) return [];
-  try {
-    return JSON.parse(tareasGuardadas);
+  const tareasGuardadas = localStorage.getItem("tareas"); // se obtienen las tareas guardadas en localStorage
+  if (!tareasGuardadas) return []; // Si no hay tareas guardadas, retorna un array vacío
+  try { // Intenta parsear las tareas guardadas
+    return JSON.parse(tareasGuardadas); // Si el parseo es exitoso, retorna las tareas
   } catch {
-    return [];
+    return []; // Si no, retorna un array vacío
   }
 }
 
+// Lógica para guardar tareas
 function guardarTareas(tareas) {
-  localStorage.setItem("tareas", JSON.stringify(tareas));
+  localStorage.setItem("tareas", JSON.stringify(tareas)); // Guarda las tareas en localStorage como un string JSON
 }
 
+// --------- FILTRAR TAREAS ---------
+// Se ejecuta al cambiar el select de estado
 const select = document.getElementById("select-estado");
-select.addEventListener("change", () => {
-  filtrarTareas(select.value);
+select.addEventListener("change", () => { // Al cambiar el select, se filtran las tareas
+  filtrarTareas(select.value); // Se pasa el valor del select a la función filtrarTareas
 });
 
+// Lógica para filtrar las tareas según el estado seleccionado
 function filtrarTareas(estadoSelect) {
-  const tareas = leerTareas();
-  lista.innerHTML = "";
+  const tareas = leerTareas(); // Leer las tareas guardadas
+  lista.innerHTML = ""; // Limpiar la lista antes de mostrar las tareas filtradas
 
-  if (estadoSelect != "todas") {
+  if (estadoSelect != "todas") { // Si el estado seleccionado no es "todas"
     tareas.forEach((tarea) => {
-      if (estadoSelect == tarea.estado) {
-        crearElementos(tarea);
+      if (estadoSelect == tarea.estado) { // Si el estado de la tarea coincide con el seleccionado
+        crearElementos(tarea);  // Crear los elementos de la tarea
       }
     });
-  } else {
+  } else { // Si el estado seleccionado es "todas"
     tareas.forEach((tarea) => {
-      crearElementos(tarea);
+      crearElementos(tarea); // Crear los elementos de la tarea sin filtrar
     });
   }
 }
 
+// Lógica para crear los elementos de la tarea
 function crearElementos(tarea){
   const tareaLi = document.createElement("li");
   tareaLi.dataset.id = tarea.id;
@@ -164,13 +175,13 @@ function crearElementos(tarea){
 
     // Guardar al presionar Enter o perder foco
     function guardarEdicion() {
-      const nuevoTexto = inputEdit.value.trim();
-      if (nuevoTexto && nuevoTexto !== tarea.texto) {
-        editarTarea(tarea.id, nuevoTexto);
+      const nuevoTexto = inputEdit.value.trim(); // Para evitar que se guarde un texto vacío
+      if (nuevoTexto && nuevoTexto !== tarea.texto) { // Si el nuevo texto no está vacío y es diferente al original
+        editarTarea(tarea.id, nuevoTexto); // Actualizar la tarea en localStorage
       }
       // Restaurar el texto (sea que cambió o no)
-      inputEdit.replaceWith(spanTexto);
-      spanTexto.textContent = nuevoTexto || tarea.texto;
+      inputEdit.replaceWith(spanTexto); // Reemplazar el input por el span de texto
+      spanTexto.textContent = nuevoTexto || tarea.texto; // Si el nuevo texto está vacío, se mantiene el texto original
     }
 
     inputEdit.addEventListener("blur", guardarEdicion);
@@ -193,8 +204,8 @@ function crearElementos(tarea){
 // Para editar tarea en localStorage
 function editarTarea(id, nuevoTexto) {
   let tareas = leerTareas();
-  tareas = tareas.map(t =>
-    t.id === id ? { ...t, texto: nuevoTexto } : t
+  tareas = tareas.map(t => // Si la tarea tiene el ID que se quiere editar
+    t.id === id ? { ...t, texto: nuevoTexto } : t // Retorna la tarea con el nuevo texto, o la tarea sin cambios
   );
   guardarTareas(tareas);
   filtrarTareas(select.value);
